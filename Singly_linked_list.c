@@ -27,18 +27,27 @@ struct node* list_initializer(int node1_data, int node2_data, int node3_data, in
     struct node* node3 = (struct node*) malloc(sizeof(struct node));
     struct node* node4 = (struct node*) malloc(sizeof(struct node));
 
-    node1->data = node1_data;
-    node1->next = node2;
-
-    node2->data = node2_data;
-    node2->next = node3;
-
-    node3->data = node3_data;
-    node3->next = node4;
-
-    node4->data = node4_data;
-    node4->next = NULL;
-
+    if (node1 != NULL)
+    {
+        node1->data = node1_data;
+        node1->next = node2;
+    }
+    if (node2 != NULL)
+    {
+        node2->data = node2_data;
+        node2->next = node3;
+    }
+    if (node3 != NULL)
+    {
+        node3->data = node3_data;
+        node3->next = node4;
+    }
+    if (node4 != NULL)
+    {
+        node4->data = node4_data;
+        node4->next = NULL;
+    }
+    
     printf("node initialization successfull!!!\n");
     return node1;
 }
@@ -51,27 +60,35 @@ struct node* begginning_node_adder(struct node* head, int new_node_data)
         new_node->data = new_node_data;
         new_node->next = head;
     }
-    printf("node addtion successful!!!\n");
+    printf("node addition successful!!!\n");
     return new_node;
 }
 
 struct node* end_node_adder(struct node* head, int new_node_data)
 {
-    struct node* ptr = head;
-    struct node* new_node = (struct node*) malloc(sizeof(struct node));
-    new_node->data = new_node_data;
-    new_node->next = NULL;
-
-    if (new_node != NULL)
+    if (head != NULL)
     {
-        while (ptr->next != NULL)
+        struct node* ptr = head;
+        struct node* new_node = (struct node*) malloc(sizeof(struct node));
+        new_node->data = new_node_data;
+        new_node->next = NULL;
+
+        if (new_node != NULL)
         {
-            ptr = ptr->next;
+            while (ptr->next != NULL)
+            {
+                ptr = ptr->next;
+            }
+            ptr->next = new_node;
         }
-        ptr->next = new_node;
+        printf("node addition successful!!!\n");
+        return head;
     }
-    printf("node addtion successful!!!\n");
-    return head;
+    else
+    {
+        printf("list is empty!!! please first initialize the list and then proceed\n");
+        return 0;
+    }
 }
 
 struct node* middle_node_adder(struct node* head, int new_node_data, int node_finder_data)
@@ -96,23 +113,30 @@ struct node* middle_node_adder(struct node* head, int new_node_data, int node_fi
         else
         {
             free(new_node);
-            printf("\nNo node with finding data = \'%d\' found!!! ABORTING node addtion...\n\n", node_finder_data);
+            printf("\nNo node with finding data = \'%d\' found!!! node addition aborted. please check and try again.\n\n", node_finder_data);
         }
     }
-    printf("node addtion successful!!!\n");
+    printf("node addition successful!!!\n");
     return head;
 }
 
 struct node* begginning_node_deleter(struct node* head)
 {
-    struct node* ptr = head;
+    if (head != NULL)
+    {
+        struct node* ptr = head;
 
-    ptr = head->next;
-    head->next = NULL;
+        ptr = head->next;
+        head->next = NULL;
 
-    free(head);
-    printf("node deletion successful!!!\n");
-    return ptr;
+        free(head);
+        printf("node deletion successful!!!\n");
+        return ptr;
+    }
+    else
+    {
+        printf("list is empty!!! nothing to delete\n");
+    }
 }
 
 struct node* end_node_deleter(struct node* head)
@@ -133,14 +157,21 @@ void middle_node_deleter(struct node* head, int node_finder_data)
 {
     struct node* ptr = head;
 
-    while (ptr->next->data != node_finder_data)
+    while (ptr != NULL && ptr->next != NULL && ptr->next->data != node_finder_data)
     {
         ptr = ptr->next;
     }
-    struct node* temp = ptr->next;
-    ptr->next = ptr->next->next;
-    free(temp);
-    printf("node deletion successful!!!\n");
+    if (ptr != NULL && ptr->next != NULL)
+    {
+        struct node* temp = ptr->next;
+        ptr->next = ptr->next->next;
+        free(temp);
+        printf("node deletion successful!!!\n");
+    }
+    else
+    {
+        printf("\nNo node with finding data = \'%d\' found!!! node deletion unsuccessful. please check and try again.\n\n", node_finder_data);
+    }
 }
 
 void list_printer(struct node* head)
